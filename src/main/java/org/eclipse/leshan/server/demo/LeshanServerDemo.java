@@ -198,6 +198,8 @@ public class LeshanServerDemo {
         // Define model provider
         List<ObjectModel> models = ObjectLoader.loadAllDefault();
         models.addAll(ObjectLoader.loadDdfResources("/models/", LwM2mDemoConstant.modelPaths));
+        String [] parkingModels = new String[] { "32800.xml", "32801.xml", "32802.xml" };
+        models.addAll(ObjectLoader.loadDdfResources("/models/", parkingModels));
         if (cli.main.modelsFolder != null) {
             models.addAll(ObjectLoader.loadObjectsFromDir(cli.main.modelsFolder, true));
         }
