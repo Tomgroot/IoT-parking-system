@@ -10,7 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="leshan-server-cf" />
-    <orderEntry type="module" module-name="leshan-core-cf" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-core-cf:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="leshan-server-core" />
     <orderEntry type="library" name="Maven: org.eclipse.californium:californium-core:3.2.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.eclipse.californium:californium-legal:3.2.0" level="project" />
@@ -18,8 +18,8 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.i2p.crypto:eddsa:0.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.californium:scandium:3.2.0" level="project" />
-    <orderEntry type="module" module-name="leshan-core-demo" />
-    <orderEntry type="module" module-name="leshan-core" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-core-demo:2.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-core:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.13.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.13.1" level="project" />
