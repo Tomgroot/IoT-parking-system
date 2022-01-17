@@ -23,10 +23,149 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47f89184-4421-43ad-bc17-fce711c35c4d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Californium3.server.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Californium3.server.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/leshan-server-demo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/LeshanServerDemo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/LeshanServerDemo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logback-config.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/32800.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/32801.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/32802.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/cli/LeshanServerDemoCLI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/model/DdfDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/model/FileLister.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/model/ObjectModelSerDes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/model/ResourceModelSerDes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/ClientServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/EventServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/ObjectSpecServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/ServerServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/json/JacksonLwM2mNodeDeserializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/json/JacksonLwM2mNodeSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/json/JacksonRegistrationSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/json/JacksonResponseSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/json/JacksonSecurityDeserializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/log/CoapMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/log/CoapMessageListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eclipse/leshan/server/demo/servlet/log/CoapMessageTracer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/credentials/server_cert.der" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/credentials/server_privkey.der" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/webapp/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/credentials/server_cert.der" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/credentials/server_privkey.der" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/LeshanServerDemo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/cli/LeshanServerDemoCLI$ServerGeneralSection$JedisPoolConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/cli/LeshanServerDemoCLI$ServerGeneralSection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/cli/LeshanServerDemoCLI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/model/DdfDownloader$DdfRef.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/model/DdfDownloader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/model/FileLister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/model/ObjectModelSerDes$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/model/ObjectModelSerDes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/model/ResourceModelSerDes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/ClientServlet$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/ClientServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$ClientCoapListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$LeshanEventSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet$RegUpdate.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/EventServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/ObjectSpecServlet$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/ObjectSpecServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/ServerServlet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonLwM2mNodeDeserializer$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonLwM2mNodeDeserializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonLwM2mNodeSerializer$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonLwM2mNodeSerializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonRegistrationSerializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonResponseSerializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/json/JacksonSecurityDeserializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/log/CoapMessage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/log/CoapMessageListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/eclipse/leshan/server/demo/servlet/log/CoapMessageTracer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/webapp/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/leshan-server-demo-2.0.0-SNAPSHOT-jar-with-dependencies.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/leshan-server-demo-2.0.0-SNAPSHOT-sources.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/leshan-server-demo-2.0.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/babel.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/public/favicon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/App.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/assets/image/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/assets/image/multicolor-leshan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/ClientInfo.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/ClientSetting.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/LeshanNavBar.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/RequestButton.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/compositeOperation/CompositeObjectControl.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/compositeOperation/CompositeObjectDialog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/compositeOperation/CompositeObjectIcons.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/compositeOperation/CompositeObjectWriteDialog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/compositeOperation/CompositeObjectsSelector.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/compositeOperation/CompositeOperationSettingMenu.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/instance/InstanceControl.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/instance/InstanceCreateDialog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/instance/InstanceView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/instance/InstanceWriteDialog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/object/ObjectControl.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/object/ObjectIcon.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/object/ObjectSelector.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/ResourceControl.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/ResourceInstanceControl.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/ResourceInstanceWriteDialog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/ResourceWriteDialog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/input/LabelledResourceInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/input/LabelledResourceInstanceInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/input/MultiInstanceResourceInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/input/ResourceInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/MultiInstancesResourceView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/ResourceDefinitionView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/ResourceExpansionPanel.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/ResourceInstanceExpansionPanel.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/ResourceInstanceView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/ResourceView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/SimpleResourceInstanceView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/resources/view/SimpleResourceView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/values/input/BooleanValueInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/values/input/DateTimeValueInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/values/input/ObjLinkValueInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/values/input/OpaqueValueInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/components/values/input/SingleValueInput.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/js/lwm2mpath.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/js/restutils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/js/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/js/valueutils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/axios.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/dialog.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/moment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/preferences.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/sse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/store.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/plugins/vuetify.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/router/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/About.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/Client.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/Clients.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/CompositeObjectView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/CompositeOperationView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/ObjectView.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/src/views/Security.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/vetur.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/vue.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,10 +243,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="94" key="#Project_Structure/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1642329986406" />
-    <state x="491" y="71" width="1092" height="787" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1642330452267">
+    <state x="491" y="71" width="1092" height="787" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1642409195120">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="491" y="71" width="1092" height="787" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1642330452267" />
+    <state x="491" y="71" width="1092" height="787" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1642409195120" />
     <state x="806" y="294" key="#com.intellij.tools.ToolEditorDialog" timestamp="1642330356721">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
