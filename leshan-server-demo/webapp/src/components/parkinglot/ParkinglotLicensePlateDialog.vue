@@ -22,16 +22,17 @@
         Reserve parking plot
       </v-card-title>
       <v-card-text>
-        <v-form ref="form" @submit.prevent="write">
+        <v-form ref="form" @submit.prevent="reserve">
           <v-text-field
             :label="`License plate`"
+            :value="value"
             @input="$emit('input', $event)"
           />
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="write">
+        <v-btn text @click="reserve">
           Reserve
         </v-btn>
         <v-btn text @click="show = false">
@@ -75,9 +76,9 @@ export default {
     },
   },
   methods: {
-    write() {
+    reserve() {
       this.show = false;
-      this.$emit("write", this.resourceValue);
+      this.$emit("reserve", this.resourceValue);
     },
   },
 };

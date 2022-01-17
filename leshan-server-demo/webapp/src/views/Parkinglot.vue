@@ -28,14 +28,14 @@
       <template v-slot:item.actions="{ item }">
       <request-button
         @on-click="openWriteDialog"
-        ref="Reserve"
+        ref="reserve"
         :title="'Reserve'"
-        >W</request-button
+        >Reserve</request-button
       >
       <parkinglot-license-plate-dialog
         v-if="showDialog"
         v-model="showDialog"
-        @write="write(item)"
+        @reserve="reserve(item)"
       />
     </template>
 
@@ -47,17 +47,18 @@
 <script>
 import ParkinglotLicensePlateDialog from "../components/parkinglot/ParkinglotLicensePlateDialog.vue";
 import RequestButton from "../components/RequestButton.vue";
+import { resourceToREST } from "../js/restutils";
 export default {
   components: { ParkinglotLicensePlateDialog, RequestButton },
   useSSE: true,
-  name: "Parkinglot",
+  name: "Parkingspot",
   data: () => ({
     loading: true,
     dialog: false,
     parkingspots: [],
     headers: [
-      { text: "Parking lot", value: "/32800/0/32700" },
-      { text: "Status", value: "/32800/0/32701" },
+      { text: "Parking spot", value: "parkingspotId" },
+      { text: "State", value: "parkingspotState" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     search: "",
@@ -69,14 +70,35 @@ export default {
       },
       set(value) {
         this.dialog = value;
-        this.$refs.W.resetState();
+        this.$refs.reserve.resetState();
       },
     }
   },
   methods: {
     openWriteDialog() {
       this.dialog = true;
-    }
+    },
+    requestPath(endpoint, path) {
+      return `api/clients/${encodeURIComponent(endpoint)}${path}`;
+    },
+    reserve(value) {
+      console.log(value['/32800/0/32700']);
+      this.path = "/32800/0/32701";
+      console.log(value);
+      console.log(value['/32800/0/32701']);
+      console.log(this.requestPath(value['endpoint'], ""));
+      let requestButton = this.$refs.reserve;
+      let payload = resourceToREST("/32800/0/32700", value);
+      console.log(payload);
+      this.axios
+        .put(this.requestPath(value['endpoint'], ""), payload)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch(() => {
+          requestButton.resetState();
+        });
+    },
   },
   mounted() {
     this.sse = this.$sse
@@ -88,6 +110,7 @@ export default {
       })
       .on("UPDATED", (msg) => {
         let park = msg.parkingspot;
+        console.log(this.parkingspots);
         this.parkingspots = this.parkingspots
           .filter((r) => park.parkingspotId !== r.parkingspotId)
           .concat(park);
