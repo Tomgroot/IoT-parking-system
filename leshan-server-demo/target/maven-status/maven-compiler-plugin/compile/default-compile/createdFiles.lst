@@ -19,6 +19,7 @@ org\eclipse\leshan\server\demo\model\FileLister.class
 org\eclipse\leshan\server\demo\servlet\EventServlet$2.class
 org\eclipse\leshan\server\demo\servlet\ObjectSpecServlet.class
 org\eclipse\leshan\server\demo\cli\LeshanServerDemoCLI$ServerGeneralSection$JedisPoolConverter.class
+org\eclipse\leshan\server\demo\LeshanServerDemo$1.class
 org\eclipse\leshan\server\demo\servlet\EventServlet$LeshanEventSource.class
 org\eclipse\leshan\server\demo\servlet\json\JacksonLwM2mNodeDeserializer$1.class
 org\eclipse\leshan\server\demo\servlet\EventServlet$1.class

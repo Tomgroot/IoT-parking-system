@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.List;
 
 import javax.jmdns.JmDNS;
@@ -41,6 +42,11 @@ import org.eclipse.leshan.core.demo.LwM2mDemoConstant;
 import org.eclipse.leshan.core.demo.cli.ShortErrorMessageHandler;
 import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
+import org.eclipse.leshan.core.node.LwM2mResource;
+import org.eclipse.leshan.core.observation.Observation;
+import org.eclipse.leshan.core.request.ObserveRequest;
+import org.eclipse.leshan.core.request.ReadRequest;
+import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.core.demo.json.servlet.SecurityServlet;
@@ -53,6 +59,9 @@ import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
 import org.eclipse.leshan.server.redis.RedisRegistrationStore;
 import org.eclipse.leshan.server.redis.RedisSecurityStore;
+import org.eclipse.leshan.server.registration.Registration;
+import org.eclipse.leshan.server.registration.RegistrationListener;
+import org.eclipse.leshan.server.registration.RegistrationUpdate;
 import org.eclipse.leshan.server.security.EditableSecurityStore;
 import org.eclipse.leshan.server.security.FileSecurityStore;
 import org.slf4j.Logger;
@@ -117,6 +126,9 @@ public class LeshanServerDemo {
             // Start servers
             lwm2mServer.start();
             webServer.start();
+
+            prepareListenersLeshanServer(lwm2mServer);
+
             LOG.info("Web server started at {}.", webServer.getURI());
 
         } catch (Exception e) {
@@ -220,6 +232,69 @@ public class LeshanServerDemo {
 
         // Create LWM2M server
         return builder.build();
+    }
+
+    private static void prepareListenersLeshanServer(LeshanServer server) {
+
+        server.getRegistrationService().addListener(new RegistrationListener() {
+            public void registered(Registration registration, Registration previousReg,
+                                   Collection<Observation> previousObsersations) {
+                LOG.info("Starting registration.");
+                observeParkingSpot(server, registration);
+                observeVehicleCounter(server, registration);
+            }
+
+            public void updated(RegistrationUpdate update, Registration updatedReg, Registration previousReg) {}
+
+            public void unregistered(Registration registration, Collection<Observation> observations, boolean expired,
+                                     Registration newReg) {}
+        });
+    }
+
+    private static void observeParkingSpot(LeshanServer server, Registration registration) {
+        try {
+            //Multiple axis joystick
+            server.send(registration, new ObserveRequest(3345,0,5500));
+            server.send(registration, new ObserveRequest(3345,0,5501));
+            server.send(registration, new ObserveRequest(3345,0,5702));
+            server.send(registration, new ObserveRequest(3345,0,5703));
+            server.send(registration, new ObserveRequest(3345,0,5704));
+            server.send(registration, new ObserveRequest(3345,0,5750));
+
+            //Addressable Text Display
+            server.send(registration, new ObserveRequest(3341,0,5527));
+            server.send(registration, new ObserveRequest(3341,0,5528));
+            server.send(registration, new ObserveRequest(3341,0,5529));
+            server.send(registration, new ObserveRequest(3341,0,5530));
+            server.send(registration, new ObserveRequest(3341,0,5531));
+            server.send(registration, new ObserveRequest(3341,0,5545));
+            server.send(registration, new ObserveRequest(3341,0,5546));
+            server.send(registration, new ObserveRequest(3341,0,5548));
+            server.send(registration, new ObserveRequest(3341,0,5750));
+
+            //Parking Spot
+            server.send(registration, new ObserveRequest(32800,0,32700));
+            server.send(registration, new ObserveRequest(32800,0,32701));
+            server.send(registration, new ObserveRequest(32800,0,32702));
+            server.send(registration, new ObserveRequest(32800,0,32706));
+            LOG.info("Parking spot registered.");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void observeVehicleCounter(LeshanServer server, Registration registration) {
+        try {
+            //Vehicle Counter
+            server.send(registration, new ObserveRequest(32801,0,32700));
+            server.send(registration, new ObserveRequest(32801,0,32703));
+            server.send(registration, new ObserveRequest(32801,0,32704));
+            server.send(registration, new ObserveRequest(32801,0,32705));
+            server.send(registration, new ObserveRequest(32801,0,32706));
+            LOG.info("Vehicle Counter registered.");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Server createJettyServer(LeshanServerDemoCLI cli, LeshanServer lwServer) {
