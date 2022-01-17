@@ -18,6 +18,7 @@
 package org.eclipse.leshan.server.demo;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -28,6 +29,10 @@ import java.util.List;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.elements.config.Configuration;
@@ -51,10 +56,7 @@ import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.core.demo.json.servlet.SecurityServlet;
 import org.eclipse.leshan.server.demo.cli.LeshanServerDemoCLI;
-import org.eclipse.leshan.server.demo.servlet.ClientServlet;
-import org.eclipse.leshan.server.demo.servlet.EventServlet;
-import org.eclipse.leshan.server.demo.servlet.ObjectSpecServlet;
-import org.eclipse.leshan.server.demo.servlet.ServerServlet;
+import org.eclipse.leshan.server.demo.servlet.*;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
 import org.eclipse.leshan.server.redis.RedisRegistrationStore;
@@ -319,6 +321,9 @@ public class LeshanServerDemo {
 
         ServletHolder clientServletHolder = new ServletHolder(new ClientServlet(lwServer));
         root.addServlet(clientServletHolder, "/api/clients/*");
+
+        ServletHolder parkingSpotServletHolder = new ServletHolder(new ParkingspotServlet(lwServer));
+        root.addServlet(parkingSpotServletHolder, "/api/parkingspots/*");
 
         ServletHolder securityServletHolder;
         if (cli.identity.isRPK()) {

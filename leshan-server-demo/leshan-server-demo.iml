@@ -12,9 +12,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.jmdns:jmdns:3.5.7" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
-    <orderEntry type="module" module-name="leshan-server-cf" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-server-cf:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-core-cf:2.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="leshan-server-core" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-server-core:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.californium:scandium:3.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-core-demo:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-core:2.0.0-SNAPSHOT" level="project" />
@@ -26,7 +26,7 @@
     <orderEntry type="library" name="Maven: info.picocli:picocli:4.6.2" level="project" />
     <orderEntry type="library" name="Maven: info.picocli:picocli-shell-jline2:4.6.2" level="project" />
     <orderEntry type="library" name="Maven: jline:jline:2.14.6" level="project" />
-    <orderEntry type="module" module-name="leshan-server-core-demo" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-server-core-demo:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-webapp:9.4.44.v20210927" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-xml:9.4.44.v20210927" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:9.4.44.v20210927" level="project" />
@@ -40,7 +40,7 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:9.4.44.v20210927" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.4.44.v20210927" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
-    <orderEntry type="module" module-name="leshan-server-redis" />
+    <orderEntry type="library" name="Maven: org.eclipse.leshan:leshan-server-redis:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: redis.clients:jedis:4.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.11.1" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20211205" level="project" />

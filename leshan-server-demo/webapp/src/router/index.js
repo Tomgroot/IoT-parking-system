@@ -22,6 +22,7 @@ import ObjectView from "../views/ObjectView.vue";
 import Security from "../views/Security.vue";
 import Server from "@leshan-server-core-demo/views/Server.vue";
 import About from "../views/About.vue";
+import ParkingLot from "../views/Parkinglot.vue";
 
 Vue.use(VueRouter);
 
@@ -73,6 +74,11 @@ const routes = [
     path: "/about",
     name: "About",
     component: About,
+  },
+  {
+    path: "/parkinglot",
+    name: "ParkingLot",
+    component: ParkingLot,
   },
 ];
 
