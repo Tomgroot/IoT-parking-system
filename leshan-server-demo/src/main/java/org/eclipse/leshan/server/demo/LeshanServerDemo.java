@@ -233,7 +233,7 @@ public class LeshanServerDemo {
         server.getRegistrationService().addListener(new RegistrationListener() {
             public void registered(Registration registration, Registration previousReg,
                                    Collection<Observation> previousObsersations) {
-                LOG.info("Starting registration.");
+                LOG.info("Device registeres.");
                 observeParkingSpot(server, registration);
                 observeVehicleCounter(server, registration);
             }
@@ -271,7 +271,6 @@ public class LeshanServerDemo {
             server.send(registration, new ObserveRequest(32800,0,32701));
             server.send(registration, new ObserveRequest(32800,0,32702));
             server.send(registration, new ObserveRequest(32800,0,32706));
-            LOG.info("Parking spot registered.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -285,7 +284,6 @@ public class LeshanServerDemo {
             server.send(registration, new ObserveRequest(32801,0,32704));
             server.send(registration, new ObserveRequest(32801,0,32705));
             server.send(registration, new ObserveRequest(32801,0,32706));
-            LOG.info("Vehicle Counter registered.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

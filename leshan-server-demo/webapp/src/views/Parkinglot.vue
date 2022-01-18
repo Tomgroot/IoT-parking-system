@@ -12,6 +12,13 @@
   ----------------------------------------------------------------------------->
 <template>
   <div>
+    <v-card-title>Name: {{info.name}}</v-card-title>
+      <v-card-subtitle>
+        Capacity: {{info.capacity}}<br>
+        Nr of reservations: {{info.reservations}}<br>
+        Vehicles in lot: {{info.vehicles}}<br>
+        Rate p/h: {{info.rate}}
+      </v-card-subtitle>
     <v-data-table
       dense
       v-if="!loading"
@@ -22,24 +29,45 @@
       class="elevation-0 fill-height ma-3"
       :search="search"
     >
-      <template v-slot:item.status="{ item }">
-        {{ item.status | `Free` }}
+      <template v-slot:item.parkingspotState="{ item }">
+        {{ item.parkingspotState }}
       </template>
-      <template v-slot:item.actions="">
+      <template v-slot:item.textdisplay="{ item }">
+        <div :style="{'background-color':item.textdisplay, 'color':item.textdisplay}">.</div>
+      </template>
+      <template v-slot:item.actions="{ item }">
       <request-button
         @on-click="openWriteDialog"
         ref="reserve"
+        v-if="item.parkingspotState == `Free`"
         :title="'Reserve'"
         >Reserve</request-button
       >
       <parkinglot-license-plate-dialog
         v-if="showDialog"
         v-model="showDialog"
-        @reserve="reserve($event)"
+        @reserve="reserve($event, item)"
       />
     </template>
 
       
+    </v-data-table>
+
+
+    <v-data-table
+      dense
+      v-if="!loading"
+      :headers="vehiclecounterHeaders"
+      :items="vehiclecounters"
+      item-key="endpoint"
+      :items-per-page="10"
+      class="elevation-0 fill-height ma-3"
+      :search="search"
+    >
+      <template v-slot:item.lastPlate="{ item }">
+        {{ item.lastPlate }}
+      </template>
+           
     </v-data-table>
   </div>
 </template>
@@ -54,11 +82,23 @@ export default {
   data: () => ({
     loading: true,
     dialog: false,
+    info: {},
     parkingspots: [],
+    vehiclecounters: [],
     headers: [
-      { text: "Parking spot", value: "parkingspotId" },
+      { text: "Parking spot ID", value: "parkingspotId" },
       { text: "State", value: "parkingspotState" },
+      { text: "Vehicle ID", value: "vehicleId" },
+      { text: "Lot name", value: "lotName" },
+      { text: "", value: "textdisplay", sortable: false  },
       { text: "Actions", value: "actions", sortable: false },
+    ],
+    vehiclecounterHeaders: [
+      { text: "Vehicle counter Id", value: "vehiclecounterId" },
+      { text: "Vehicle counter", value: "vehicleCounter" },
+      { text: "Last plate", value: "lastPlate" },
+      { text: "Direction", value: "direction" },
+      { text: "Lot name", value: "lotNameVehicleCounter" },
     ],
     search: "",
   }),
@@ -80,11 +120,10 @@ export default {
     requestPath(endpoint, path) {
       return `api/clients/${encodeURIComponent(endpoint)}${path}`;
     },
-    reserve(value) {
+    reserve(value, item) {
       let requestButton = this.$refs.reserve;
-      console.log(value);
       this.axios
-        .put("api/clients/DESKTOP-TOM/reserve?timeout=5&format=TLV", {"licenseplate": value})
+        .put("api/clients/"+item.endpoint+"/reserve?timeout=5&format=TLV", {"licenseplate": value})
         .then((response) => {
           console.log(response);
         })
@@ -97,26 +136,30 @@ export default {
     this.sse = this.$sse
       .create({ url: "api/event" })
       .on("REGISTRATION", (park) => {
+        this.vehiclecounters = this.vehiclecounters
+          .filter((p) => p.endpoint !== park.endpoint && p.vehiclecounterId !== "")
+          .concat(park);
+
         this.parkingspots = this.parkingspots
-          .filter((p) => p.endpoint !== p.endpoint)
+          .filter((p) => p.endpoint !== park.endpoint && p.parkingspotId !== "")
           .concat(park);
       })
       .on("UPDATED", (park) => {
+        this.vehiclecounters = this.vehiclecounters
+          .filter((p) => p.endpoint !== park.endpoint && p.vehiclecounterId !== "")
+          .concat(park);
+
         this.parkingspots = this.parkingspots
-          .filter((p) => p.endpoint !== park.endpoint)
+          .filter((p) => p.endpoint !== park.endpoint && p.parkingspotId !== "")
           .concat(park);
       })
       .on("DEREGISTRATION", (park) => {
         this.parkingspots = this.parkingspots.filter(
           (p) => p.endpoint !== park.endpoint
         );
-      })
-      .on("SLEEPING", (park) => {
-        for (var i = 0; i < this.parkingspots.length; i++) {
-          if (this.parkingspots[i].endpoint === park.ep) {
-            this.parkingspots[i].sleeping = true;
-          }
-        }
+        this.vehiclecounters = this.vehiclecounters.filter(
+          (p) => p.endpoint !== park.endpoint
+        );
       })
       .on("error", (err) => {
         console.error("sse unexpected error", err);
@@ -128,9 +171,20 @@ export default {
     this.axios
       .get("api/parkingspots")
       .then(
-        (response) => (
-          (this.loading = false), (this.parkingspots = response.data)
-        )
+        (response) => {
+          this.loading = false; 
+          this.parkingspots = response.data.filter((p) => p.parkingspotId !== "")
+          this.vehiclecounters = response.data.filter((p) => p.vehiclecounterId !== "")
+        }
+      );
+    
+    this.axios
+      .get("api/parkingspots/info")
+      .then(
+        (response) => {
+          this.loading = false; 
+          this.info = response.data;
+        }
       );
   },
   beforeDestroy() {

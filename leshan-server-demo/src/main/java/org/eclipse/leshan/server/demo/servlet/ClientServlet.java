@@ -328,6 +328,10 @@ public class ClientServlet extends HttpServlet {
                 LwM2mNode nodeLicensePlate = contentToLwM2mNode("{\"id\":32702,\"kind\":\"singleResource\",\"value\":\""+licensePlate+"\",\"type\":\"string\"}");
                 WriteRequest requestLicensePlate = new WriteRequest(Mode.REPLACE, contentFormat, "/32800/0/32702", nodeLicensePlate);
                 WriteResponse cResponseLicensePlate = server.send(registration, requestLicensePlate, extractTimeout(req));
+
+                LwM2mNode nodeTextDisplay = contentToLwM2mNode("{\"id\":5527,\"kind\":\"singleResource\",\"value\":\"orange\",\"type\":\"string\"}");
+                WriteRequest requestTextDisplay = new WriteRequest(Mode.REPLACE, contentFormat, "/3341/0/5527", nodeTextDisplay);
+                WriteResponse cResponseTextDisplay = server.send(registration, requestTextDisplay, extractTimeout(req));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
