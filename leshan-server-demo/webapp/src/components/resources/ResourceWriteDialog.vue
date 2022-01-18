@@ -77,6 +77,7 @@ export default {
   },
   watch: {
     value(v) {
+      console.log(this.resourcedef);
       // reset local state when dialog is open
       if (v) this.resourceValue = null;
     },

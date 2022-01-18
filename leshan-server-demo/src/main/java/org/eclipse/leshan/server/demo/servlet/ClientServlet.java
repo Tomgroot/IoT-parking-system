@@ -34,10 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.leshan.core.attributes.AttributeSet;
-import org.eclipse.leshan.core.node.LwM2mNode;
-import org.eclipse.leshan.core.node.LwM2mObjectInstance;
-import org.eclipse.leshan.core.node.LwM2mPath;
-import org.eclipse.leshan.core.node.LwM2mSingleResource;
+import org.eclipse.leshan.core.model.ResourceModel;
+import org.eclipse.leshan.core.node.*;
 import org.eclipse.leshan.core.node.codec.CodecException;
 import org.eclipse.leshan.core.request.ContentFormat;
 import org.eclipse.leshan.core.request.CreateRequest;
@@ -75,6 +73,7 @@ import org.eclipse.leshan.server.demo.servlet.json.JacksonLwM2mNodeSerializer;
 import org.eclipse.leshan.server.demo.servlet.json.JacksonRegistrationSerializer;
 import org.eclipse.leshan.server.demo.servlet.json.JacksonResponseSerializer;
 import org.eclipse.leshan.server.registration.Registration;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -277,6 +276,7 @@ public class ClientServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String[] path = StringUtils.split(req.getPathInfo(), '/');
         String clientEndpoint = path[0];
+
         // /clients/endPoint/composite : do LightWeight M2M WriteComposite request on a given client.
         if (path.length == 2 && "composite".equals(path[1])) {
             try {
@@ -309,9 +309,28 @@ public class ClientServlet extends HttpServlet {
             return;
         }
 
-        // at least /endpoint/objectId/instanceId
-        if (path.length < 3) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
+        // creating endpoints for reserving parkingspots
+        if (path.length < 3 && path[path.length - 1].equals("reserve")) {
+            Registration registration = server.getRegistrationService().getByEndpoint(clientEndpoint);
+            try {
+                JSONObject json = new JSONObject(IOUtils.toString(req.getInputStream(), req.getCharacterEncoding()));
+                String licensePlate = (String) json.get("licenseplate");
+
+                String contentFormatParam = req.getParameter(FORMAT_PARAM);
+                ContentFormat contentFormat = contentFormatParam != null
+                        ? ContentFormat.fromName(contentFormatParam.toUpperCase())
+                        : null;
+
+                LwM2mNode nodeState = contentToLwM2mNode("{\"id\":32701,\"kind\":\"singleResource\",\"value\":\"Reserved\",\"type\":\"string\"}");
+                WriteRequest requestState = new WriteRequest(Mode.REPLACE, contentFormat, "/32800/0/32701", nodeState);
+                WriteResponse cResponseState = server.send(registration, requestState, extractTimeout(req));
+
+                LwM2mNode nodeLicensePlate = contentToLwM2mNode("{\"id\":32702,\"kind\":\"singleResource\",\"value\":\""+licensePlate+"\",\"type\":\"string\"}");
+                WriteRequest requestLicensePlate = new WriteRequest(Mode.REPLACE, contentFormat, "/32800/0/32702", nodeLicensePlate);
+                WriteResponse cResponseLicensePlate = server.send(registration, requestLicensePlate, extractTimeout(req));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return;
         }
 
@@ -341,8 +360,9 @@ public class ClientServlet extends HttpServlet {
 
                     // create & process request
                     LwM2mNode node = extractLwM2mNode(target, req, new LwM2mPath(target));
-                    WriteRequest request = new WriteRequest(replace ? Mode.REPLACE : Mode.UPDATE, contentFormat, target,
-                            node);
+
+                    WriteRequest request = new WriteRequest(replace ? Mode.REPLACE : Mode.UPDATE, contentFormat, target, node);
+
                     WriteResponse cResponse = server.send(registration, request, extractTimeout(req));
                     processDeviceResponse(req, resp, cResponse);
                 }
@@ -558,6 +578,16 @@ public class ClientServlet extends HttpServlet {
             resp.getOutputStream().write(response.getBytes());
             resp.setStatus(HttpServletResponse.SC_OK);
         }
+    }
+
+    private LwM2mNode contentToLwM2mNode(String content) {
+        LwM2mNode node;
+        try {
+            node = mapper.readValue(content, LwM2mNode.class);
+        } catch (JsonProcessingException e) {
+            throw new InvalidRequestException(e, "unable to parse json to tlv:%s", e.getMessage());
+        }
+        return node;
     }
 
     private LwM2mNode extractLwM2mNode(String target, HttpServletRequest req, LwM2mPath path) throws IOException {

@@ -25,7 +25,7 @@
       <template v-slot:item.status="{ item }">
         {{ item.status | `Free` }}
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:item.actions="">
       <request-button
         @on-click="openWriteDialog"
         ref="reserve"
@@ -35,7 +35,7 @@
       <parkinglot-license-plate-dialog
         v-if="showDialog"
         v-model="showDialog"
-        @reserve="reserve(item)"
+        @reserve="reserve($event)"
       />
     </template>
 
@@ -47,7 +47,6 @@
 <script>
 import ParkinglotLicensePlateDialog from "../components/parkinglot/ParkinglotLicensePlateDialog.vue";
 import RequestButton from "../components/RequestButton.vue";
-import { resourceToREST } from "../js/restutils";
 export default {
   components: { ParkinglotLicensePlateDialog, RequestButton },
   useSSE: true,
@@ -82,16 +81,10 @@ export default {
       return `api/clients/${encodeURIComponent(endpoint)}${path}`;
     },
     reserve(value) {
-      console.log(value['/32800/0/32700']);
-      this.path = "/32800/0/32701";
-      console.log(value);
-      console.log(value['/32800/0/32701']);
-      console.log(this.requestPath(value['endpoint'], ""));
       let requestButton = this.$refs.reserve;
-      let payload = resourceToREST("/32800/0/32700", value);
-      console.log(payload);
+      console.log(value);
       this.axios
-        .put(this.requestPath(value['endpoint'], ""), payload)
+        .put("api/clients/DESKTOP-TOM/reserve?timeout=5&format=TLV", {"licenseplate": value})
         .then((response) => {
           console.log(response);
         })
@@ -105,19 +98,17 @@ export default {
       .create({ url: "api/event" })
       .on("REGISTRATION", (park) => {
         this.parkingspots = this.parkingspots
-          .filter((r) => park.endpoint !== r.endpoint)
+          .filter((p) => p.endpoint !== p.endpoint)
           .concat(park);
       })
-      .on("UPDATED", (msg) => {
-        let park = msg.parkingspot;
-        console.log(this.parkingspots);
+      .on("UPDATED", (park) => {
         this.parkingspots = this.parkingspots
-          .filter((r) => park.parkingspotId !== r.parkingspotId)
+          .filter((p) => p.endpoint !== park.endpoint)
           .concat(park);
       })
       .on("DEREGISTRATION", (park) => {
         this.parkingspots = this.parkingspots.filter(
-          (p) => park.parkingspotId !== p.parkingspotId
+          (p) => p.endpoint !== park.endpoint
         );
       })
       .on("SLEEPING", (park) => {

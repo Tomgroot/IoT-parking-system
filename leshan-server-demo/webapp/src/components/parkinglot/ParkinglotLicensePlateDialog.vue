@@ -25,8 +25,7 @@
         <v-form ref="form" @submit.prevent="reserve">
           <v-text-field
             :label="`License plate`"
-            :value="value"
-            @input="$emit('input', $event)"
+            @input="input($event)"
           />
         </v-form>
       </v-card-text>
@@ -71,11 +70,13 @@ export default {
   },
   watch: {
     value(v) {
-      // reset local state when dialog is open
       if (v) this.resourceValue = null;
     },
   },
   methods: {
+    input(event) {
+      this.resourceValue = event; 
+    },
     reserve() {
       this.show = false;
       this.$emit("reserve", this.resourceValue);

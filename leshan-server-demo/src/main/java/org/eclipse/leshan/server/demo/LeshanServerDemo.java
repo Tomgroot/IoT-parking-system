@@ -18,7 +18,6 @@
 package org.eclipse.leshan.server.demo;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -29,10 +28,6 @@ import java.util.List;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.elements.config.Configuration;
@@ -47,11 +42,8 @@ import org.eclipse.leshan.core.demo.LwM2mDemoConstant;
 import org.eclipse.leshan.core.demo.cli.ShortErrorMessageHandler;
 import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
-import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.core.observation.Observation;
 import org.eclipse.leshan.core.request.ObserveRequest;
-import org.eclipse.leshan.core.request.ReadRequest;
-import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.core.demo.json.servlet.SecurityServlet;
@@ -322,7 +314,7 @@ public class LeshanServerDemo {
         ServletHolder clientServletHolder = new ServletHolder(new ClientServlet(lwServer));
         root.addServlet(clientServletHolder, "/api/clients/*");
 
-        ServletHolder parkingSpotServletHolder = new ServletHolder(new ParkingspotServlet(lwServer));
+        ServletHolder parkingSpotServletHolder = new ServletHolder(new ParkinglotServlet(lwServer));
         root.addServlet(parkingSpotServletHolder, "/api/parkingspots/*");
 
         ServletHolder securityServletHolder;

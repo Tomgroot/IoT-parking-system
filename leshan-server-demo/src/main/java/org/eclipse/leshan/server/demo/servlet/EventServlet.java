@@ -98,28 +98,14 @@ public class EventServlet extends EventSourceServlet {
         @Override
         public void registered(Registration registration, Registration previousReg,
                 Collection<Observation> previousObsersations) {
-            String jReg = null;
-            try {
-                jReg = EventServlet.this.mapper.writeValueAsString(registration);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-            sendEvent(EVENT_REGISTRATION, jReg, registration.getEndpoint());
+            //Hacky way to show registered parking spots
+            ParkinglotServlet.getInstance().parkingspotNewRegistration(registration);
+            sendEvent(EVENT_REGISTRATION, ParkinglotServlet.getInstance().getParkingspotsJson(), registration.getEndpoint());
         }
 
         @Override
         public void updated(RegistrationUpdate update, Registration updatedRegistration,
                 Registration previousRegistration) {
-            RegUpdate regUpdate = new RegUpdate();
-            regUpdate.registration = updatedRegistration;
-            regUpdate.update = update;
-            String jReg = null;
-            try {
-                jReg = EventServlet.this.mapper.writeValueAsString(regUpdate);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-            sendEvent(EVENT_UPDATED, jReg, updatedRegistration.getEndpoint());
         }
 
         @Override
@@ -160,30 +146,8 @@ public class EventServlet extends EventSourceServlet {
 
         @Override
         public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Received notification from [{}] containing value [{}]", observation.getPath(),
-                        response.getContent());
-            }
-            String jsonContent = null;
-            try {
-                jsonContent = mapper.writeValueAsString(response.getContent());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (registration != null) {
-                String data = new StringBuilder("{\"ep\":\"") //
-                        .append(registration.getEndpoint()) //
-                        .append("\",\"kind\":\"single\"") //
-                        .append(",\"res\":\"") //
-                        .append(observation.getPath()).append("\",\"val\":") //
-                        .append(jsonContent) //
-                        .append("}") //
-                        .toString();
-
-                sendEvent(EVENT_NOTIFICATION, data, registration.getEndpoint());
-            }
+            ParkinglotServlet.getInstance().parkingspotOnResponse(observation, registration, response);
+            sendEvent(EVENT_UPDATED, ParkinglotServlet.getInstance().getSingleParkingspotJson(registration.getId()), registration.getEndpoint());
         }
 
         @Override
