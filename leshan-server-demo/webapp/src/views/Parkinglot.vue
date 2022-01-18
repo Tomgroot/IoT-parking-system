@@ -17,7 +17,18 @@
         Capacity: {{info.capacity}}<br>
         Nr of reservations: {{info.reservations}}<br>
         Vehicles in lot: {{info.vehicles}}<br>
-        Rate p/h: {{info.rate}}
+        Rate p/h: {{info.rate}}<br>
+      <request-button
+        @on-click="openRateDialog"
+        ref="rate"
+        :title="'Rate'"
+        >Change rate</request-button
+      >
+      <parkinglot-rate-dialog
+        v-if="showRateDialog"
+        v-model="showRateDialog"
+        @changeRate="changeRate($event)"
+      />
       </v-card-subtitle>
     <v-data-table
       dense
@@ -74,14 +85,16 @@
 
 <script>
 import ParkinglotLicensePlateDialog from "../components/parkinglot/ParkinglotLicensePlateDialog.vue";
+import ParkinglotRateDialog from "../components/parkinglot/ParkinglotRateDialog.vue";
 import RequestButton from "../components/RequestButton.vue";
 export default {
-  components: { ParkinglotLicensePlateDialog, RequestButton },
+  components: { ParkinglotLicensePlateDialog, RequestButton, ParkinglotRateDialog },
   useSSE: true,
   name: "Parkingspot",
   data: () => ({
     loading: true,
     dialog: false,
+    rateDialog: false,
     info: {},
     parkingspots: [],
     vehiclecounters: [],
@@ -111,11 +124,23 @@ export default {
         this.dialog = value;
         this.$refs.reserve.resetState();
       },
+    },
+    showRateDialog: {
+      get() {
+        return this.rateDialog;
+      },
+      set(value) {
+        this.rateDialog = value;
+        this.$refs.rate.resetState();
+      },
     }
   },
   methods: {
     openWriteDialog() {
       this.dialog = true;
+    },
+    openRateDialog() {
+      this.rateDialog = true;
     },
     requestPath(endpoint, path) {
       return `api/clients/${encodeURIComponent(endpoint)}${path}`;
@@ -126,6 +151,17 @@ export default {
         .put("api/clients/"+item.endpoint+"/reserve?timeout=5&format=TLV", {"licenseplate": value})
         .then((response) => {
           console.log(response);
+        })
+        .catch(() => {
+          requestButton.resetState();
+        });
+    },
+    changeRate(value) {
+      let requestButton = this.$refs.rate;
+      this.axios
+        .put("api/parkingspots", {"rate": value})
+        .then((response) => {
+          this.info = response.data;
         })
         .catch(() => {
           requestButton.resetState();

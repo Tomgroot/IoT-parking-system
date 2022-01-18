@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.leshan.core.node.LwM2mNode;
 import org.eclipse.leshan.core.node.LwM2mSingleResource;
@@ -40,16 +41,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.net.www.http.HttpClient;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -101,6 +98,17 @@ public class ParkinglotServlet extends HttpServlet {
             resp.getOutputStream().write(getParkingspotsJson().getBytes(StandardCharsets.UTF_8));
         }
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String content = IOUtils.toString(req.getInputStream(), req.getCharacterEncoding());
+        JSONObject json = new JSONObject(content);
+        parkinglotProperties.put("rate", json.get("rate"));
+        resp.setContentType("application/json");
+        resp.getOutputStream().write(getParkinglotPropertiesJson().getBytes(StandardCharsets.UTF_8));
+        resp.setStatus(HttpServletResponse.SC_OK);
+        return;
     }
 
     public String getParkinglotPropertiesJson() {
