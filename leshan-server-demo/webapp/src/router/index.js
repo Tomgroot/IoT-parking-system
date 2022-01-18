@@ -29,7 +29,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    redirect: "/clients",
+    redirect: "/parkinglot",
   },
   {
     path: "/clients/:endpoint",

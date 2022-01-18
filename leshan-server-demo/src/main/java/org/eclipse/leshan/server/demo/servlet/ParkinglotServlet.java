@@ -31,6 +31,7 @@ import org.eclipse.leshan.core.request.*;
 import org.eclipse.leshan.core.request.exception.InvalidRequestException;
 import org.eclipse.leshan.core.response.*;
 import org.eclipse.leshan.server.californium.LeshanServer;
+import org.eclipse.leshan.server.demo.LeshanServerDemo;
 import org.eclipse.leshan.server.demo.servlet.json.JacksonLwM2mNodeDeserializer;
 import org.eclipse.leshan.server.demo.servlet.json.JacksonLwM2mNodeSerializer;
 import org.eclipse.leshan.server.observation.ObservationListener;
@@ -46,8 +47,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -62,10 +66,10 @@ public class ParkinglotServlet extends HttpServlet {
     private static ParkinglotServlet parkinglotServlet;
     private HashMap<String, Object> parkinglotProperties = new HashMap<>();
     private final ObjectMapper mapper;
+    private String prevSql = "";
 
     public ParkinglotServlet(LeshanServer server) {
         this.server = server;
-        server.getObservationService().addListener(this.observationListener);
         server.getRegistrationService().addListener(this.registrationListener);
         parkinglotProperties.put("name", "P1");
         parkinglotProperties.put("capacity", 0);
@@ -230,21 +234,74 @@ public class ParkinglotServlet extends HttpServlet {
                     occupyParkingSpot(registration, "Free", false);
                 }
             }
-            if (path.equals("lastPlate") && parkinglot.get("direction").equals("1")
-                    && ((LwM2mSingleResource) resource).getValue().toString().equals(parkinglot.get("vehicleId"))) {
-                if (checkKenteken()) {
+            //When driver enters the parkinglot
+            if ((path.equals("lastPlate") && parkinglot.get("direction").equals("1"))
+                    || (path.equals("direction") && parkinglot.get("lastPlate") != null)) {
+                String value = ((LwM2mSingleResource) resource).getValue().toString();
+                if ((value != null && !checkLicensePlate(value))
+                        || (parkinglot.get("lastPlate") != null && !checkLicensePlate(parkinglot.get("lastPlate")))) {
+                    LOG.info("CAR NOT ELECTRIC!");
+                    //What to do when car is electric?
+                } else {
+                    LOG.info("CAR IS ELECTRIC, IT IS WELCOME!");
+                }
+                if (((LwM2mSingleResource) resource).getValue().toString().equals(parkinglot.get("vehicleId"))) {
                     occupyParkingSpot(registration, "Occupied", false);
                 }
             }
+            //Updates every change to mysql
+            updateStatisticToMySql(registration.getId() + "/" + path, ((LwM2mSingleResource) resource).getValue().toString());
             parkinglot.put(path, ((LwM2mSingleResource) resource).getValue().toString());
             parkingspots.put(registration.getId(), parkinglot);
             updateParkinglotProperties();
         }
     }
 
-    private boolean checkKenteken () {
-        //TODO
-        return true;
+    private boolean checkLicensePlate(String plate) {
+        try {
+            plate = plate.replaceAll("-", "").toUpperCase();
+            InputStream is = new URL("https://opendata.rdw.nl/resource/d3ku-w8e3.json?kenteken=" + plate).openStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            StringBuilder sb = new StringBuilder();
+            int cp;
+            while ((cp = rd.read()) != -1) {
+                sb.append((char) cp);
+            }
+            JSONArray json = new JSONArray(sb.toString());
+            for(int i=0;i<json.length();i++){
+                JSONObject object = json.getJSONObject(i);
+                if (object.get("brandstof_omschrijving") != null
+                        && object.get("brandstof_omschrijving").toString().equals("Elektriciteit")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void updateStatisticToMySql(String object, String value) {
+        //To prevent MySQL from filling the same values
+        if (prevSql.equals(object+value)) {
+            return;
+        }
+        prevSql = object+value;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection =  DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=convertToNull",
+                    "root", ""
+            );
+            String sql = "INSERT INTO `iotparking`.`stats` (id, object, value, datetime) VALUES (NULL, '"+object+"', '"+value+"', CURRENT_TIMESTAMP())";
+            PreparedStatement p = connection.prepareStatement(sql);
+            p.executeUpdate(sql);
+            p.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            LOG.error("Something went wrong with connecting to your MySQL server");
+        }
     }
 
     private void occupyParkingSpot(Registration registration, String state, boolean colorOnly) {
@@ -270,21 +327,19 @@ public class ParkinglotServlet extends HttpServlet {
             throw new InvalidRequestException(e, "%s", e.getMessage());
         }
     }
-
     private final ObservationListener observationListener = new ObservationListener() {
 
         @Override
         public void newObservation(Observation observation, Registration registration) {
-            parkingspotNewRegistration(registration);
+           parkingspotNewRegistration(registration);
         }
-
         @Override
         public void cancelled(Observation observation) { }
 
         @Override
         public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
-            parkingspotOnResponse(observation, registration, response);
-        }
+             parkingspotOnResponse(observation, registration, response);
+         }
 
         @Override
         public void onResponse(CompositeObservation observation, Registration registration, ObserveCompositeResponse response) { }

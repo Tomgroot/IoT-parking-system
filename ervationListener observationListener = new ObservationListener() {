@@ -1,0 +1,219 @@
+[1mdiff --git a/leshan-server-demo/pom.xml b/leshan-server-demo/pom.xml[m
+[1mindex 3a5da3d..d8f2d03 100644[m
+[1m--- a/leshan-server-demo/pom.xml[m
+[1m+++ b/leshan-server-demo/pom.xml[m
+[36m@@ -27,6 +27,12 @@[m [mContributors:[m
+     <description>A LWM2M demonstration server running an embedded Jetty server</description>[m
+ [m
+     <dependencies>[m
+[32m+[m[32m        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>mysql</groupId>[m
+[32m+[m[32m            <artifactId>mysql-connector-java</artifactId>[m
+[32m+[m[32m            <version>8.0.28</version>[m
+[32m+[m[32m        </dependency>[m
+         <dependency>[m
+             <groupId>org.jmdns</groupId>[m
+             <artifactId>jmdns</artifactId>[m
+[1mdiff --git a/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java b/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java[m
+[1mindex d756c95..00176a6 100644[m
+[1m--- a/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java[m
+[1m+++ b/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/LeshanServerDemo.java[m
+[36m@@ -23,6 +23,9 @@[m [mimport java.net.InetAddress;[m
+ import java.net.InetSocketAddress;[m
+ import java.security.cert.Certificate;[m
+ import java.security.cert.X509Certificate;[m
+[32m+[m[32mimport java.sql.Connection;[m
+[32m+[m[32mimport java.sql.DriverManager;[m
+[32m+[m[32mimport java.sql.Statement;[m
+ import java.util.Collection;[m
+ import java.util.List;[m
+ [m
+[1mdiff --git a/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/servlet/ParkinglotServlet.java b/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/servlet/ParkinglotServlet.java[m
+[1mindex 4acd622..6a14469 100644[m
+[1m--- a/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/servlet/ParkinglotServlet.java[m
+[1m+++ b/leshan-server-demo/src/main/java/org/eclipse/leshan/server/demo/servlet/ParkinglotServlet.java[m
+[36m@@ -31,6 +31,7 @@[m [mimport org.eclipse.leshan.core.request.*;[m
+ import org.eclipse.leshan.core.request.exception.InvalidRequestException;[m
+ import org.eclipse.leshan.core.response.*;[m
+ import org.eclipse.leshan.server.californium.LeshanServer;[m
+[32m+[m[32mimport org.eclipse.leshan.server.demo.LeshanServerDemo;[m
+ import org.eclipse.leshan.server.demo.servlet.json.JacksonLwM2mNodeDeserializer;[m
+ import org.eclipse.leshan.server.demo.servlet.json.JacksonLwM2mNodeSerializer;[m
+ import org.eclipse.leshan.server.observation.ObservationListener;[m
+[36m@@ -46,8 +47,11 @@[m [mimport javax.servlet.ServletException;[m
+ import javax.servlet.http.HttpServlet;[m
+ import javax.servlet.http.HttpServletRequest;[m
+ import javax.servlet.http.HttpServletResponse;[m
+[31m-import java.io.IOException;[m
+[32m+[m[32mimport java.io.*;[m
+[32m+[m[32mimport java.net.*;[m
+[32m+[m[32mimport java.nio.charset.Charset;[m
+ import java.nio.charset.StandardCharsets;[m
+[32m+[m[32mimport java.sql.*;[m
+ import java.util.*;[m
+ [m
+ /**[m
+[36m@@ -62,10 +66,10 @@[m [mpublic class ParkinglotServlet extends HttpServlet {[m
+     private static ParkinglotServlet parkinglotServlet;[m
+     private HashMap<String, Object> parkinglotProperties = new HashMap<>();[m
+     private final ObjectMapper mapper;[m
+[32m+[m[32m    private String prevSql = "";[m
+ [m
+     public ParkinglotServlet(LeshanServer server) {[m
+         this.server = server;[m
+[31m-        server.getObservationService().addListener(this.observationListener);[m
+         server.getRegistrationService().addListener(this.registrationListener);[m
+         parkinglotProperties.put("name", "P1");[m
+         parkinglotProperties.put("capacity", 0);[m
+[36m@@ -230,21 +234,74 @@[m [mpublic class ParkinglotServlet extends HttpServlet {[m
+                     occupyParkingSpot(registration, "Free", false);[m
+                 }[m
+             }[m
+[31m-            if (path.equals("lastPlate") && parkinglot.get("direction").equals("1")[m
+[31m-                    && ((LwM2mSingleResource) resource).getValue().toString().equals(parkinglot.get("vehicleId"))) {[m
+[31m-                if (checkKenteken()) {[m
+[32m+[m[32m            //When driver enters the parkinglot[m
+[32m+[m[32m            if ((path.equals("lastPlate") && parkinglot.get("direction").equals("1"))[m
+[32m+[m[32m                    || (path.equals("direction") && parkinglot.get("lastPlate") != null)) {[m
+[32m+[m[32m                String value = ((LwM2mSingleResource) resource).getValue().toString();[m
+[32m+[m[32m                if ((value != null && !checkLicensePlate(value))[m
+[32m+[m[32m                        || (parkinglot.get("lastPlate") != null && !checkLicensePlate(parkinglot.get("lastPlate")))) {[m
+[32m+[m[32m                    LOG.info("CAR NOT ELECTRIC!");[m
+[32m+[m[32m                    //What to do when car is electric?[m
+[32m+[m[32m                } else {[m
+[32m+[m[32m                    LOG.info("CAR IS ELECTRIC, IT IS WELCOME!");[m
+[32m+[m[32m                }[m
+[32m+[m[32m                if (((LwM2mSingleResource) resource).getValue().toString().equals(parkinglot.get("vehicleId"))) {[m
+                     occupyParkingSpot(registration, "Occupied", false);[m
+                 }[m
+             }[m
+[32m+[m[32m            //Updates every change to mysql[m
+[32m+[m[32m            updateStatisticToMySql(registration.getId() + "/" + path, ((LwM2mSingleResource) resource).getValue().toString());[m
+             parkinglot.put(path, ((LwM2mSingleResource) resource).getValue().toString());[m
+             parkingspots.put(registration.getId(), parkinglot);[m
+             updateParkinglotProperties();[m
+         }[m
+     }[m
+ [m
+[31m-    private boolean checkKenteken () {[m
+[31m-        //TODO[m
+[31m-        return true;[m
+[32m+[m[32m    private boolean checkLicensePlate(String plate) {[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            plate = plate.replaceAll("-", "").toUpperCase();[m
+[32m+[m[32m            InputStream is = new URL("https://opendata.rdw.nl/resource/d3ku-w8e3.json?kenteken=" + plate).openStream();[m
+[32m+[m[32m            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));[m
+[32m+[m[32m            StringBuilder sb = new StringBuilder();[m
+[32m+[m[32m            int cp;[m
+[32m+[m[32m            while ((cp = rd.read()) != -1) {[m
+[32m+[m[32m                sb.append((char) cp);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            JSONArray json = new JSONArray(sb.toString());[m
+[32m+[m[32m            for(int i=0;i<json.length();i++){[m
+[32m+[m[32m                JSONObject object = json.getJSONObject(i);[m
+[32m+[m[32m                if (object.get("brandstof_omschrijving") != null[m
+[32m+[m[32m                        && object.get("brandstof_omschrijving").toString().equals("Elektriciteit")) {[m
+[32m+[m[32m                    return true;[m
+[32m+[m[32m                } else {[m
+[32m+[m[32m                    return false;[m
+[32m+[m[32m                }[m
+[32m+[m[32m            }[m
+[32m+[m[32m        } catch (IOException e) {[m
+[32m+[m[32m            e.printStackTrace();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return false;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void updateStatisticToMySql(String object, String value) {[m
+[32m+[m[32m        //To prevent MySQL from filling the same values[m
+[32m+[m[32m        if (prevSql.equals(object+value)) {[m
+[32m+[m[32m            return;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        prevSql = object+value;[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            Class.forName("com.mysql.cj.jdbc.Driver");[m
+[32m+[m[32m            Connection connection =  DriverManager.getConnection([m
+[32m+[m[32m                    "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=convertToNull",[m
+[32m+[m[32m                    "root", ""[m
+[32m+[m[32m            );[m
+[32m+[m[32m            String sql = "INSERT INTO `iotparking`.`stats` (id, object, value, datetime) VALUES (NULL, '"+object+"', '"+value+"', CURRENT_TIMESTAMP())";[m
+[32m+[m[32m            PreparedStatement p = connection.prepareStatement(sql);[m
+[32m+[m[32m            p.executeUpdate(sql);[m
+[32m+[m[32m            p.close();[m
+[32m+[m[32m        } catch (SQLException | ClassNotFoundException e) {[m
+[32m+[m[32m            LOG.error(e.getMessage());[m
+[32m+[m[32m        }[m
+     }[m
+ [m
+     private void occupyParkingSpot(Registration registration, String state, boolean colorOnly) {[m
+[36m@@ -271,28 +328,6 @@[m [mpublic class ParkinglotServlet extends HttpServlet {[m
+         }[m
+     }[m
+ [m
+[31m-    private final ObservationListener observationListener = new ObservationListener() {[m
+[31m-[m
+[31m-        @Override[m
+[31m-        public void newObservation(Observation observation, Registration registration) {[m
+[31m-            parkingspotNewRegistration(registration);[m
+[31m-        }[m
+[31m-[m
+[31m-        @Override[m
+[31m-        public void cancelled(Observation observation) { }[m
+[31m-[m
+[31m-        @Override[m
+[31m-        public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {[m
+[31m-            parkingspotOnResponse(observation, registration, response);[m
+[31m-        }[m
+[31m-[m
+[31m-        @Override[m
+[31m-        public void onResponse(CompositeObservation observation, Registration registration, ObserveCompositeResponse response) { }[m
+[31m-[m
+[31m-        @Override[m
+[31m-        public void onError(Observation observation, Registration registration, Exception error) { }[m
+[31m-    };[m
+[31m-[m
+     final RegistrationListener registrationListener = new RegistrationListener() {[m
+ [m
+         public void registered(Registration registration, Registration previousReg,[m
+[1mdiff --git a/leshan-server-demo/webapp/src/App.vue b/leshan-server-demo/webapp/src/App.vue[m
+[1mindex 7bcc101..0b76216 100644[m
+[1m--- a/leshan-server-demo/webapp/src/App.vue[m
+[1m+++ b/leshan-server-demo/webapp/src/App.vue[m
+[36m@@ -12,9 +12,7 @@[m
+   ----------------------------------------------------------------------------->[m
+ <template>[m
+   <div id="app">[m
+[31m-    <v-app>[m
+[31m-      <leshan-nav-bar/>[m
+[31m-      [m
+[32m+[m[32m    <v-app>[m[41m      [m
+       <v-main>[m
+         <v-container fluid class="pa-0">[m
+           <router-view >  </router-view>  [m
+[36m@@ -25,11 +23,8 @@[m
+ </template>[m
+ [m
+ <script>[m
+[31m-import LeshanNavBar from "@/components/LeshanNavBar.vue";[m
+ [m
+ export default {[m
+[31m-  components: {[m
+[31m-    LeshanNavBar,[m
+[31m-  },[m
+[32m+[m[32m  components: {},[m
+ };[m
+ </script>[m
+[1mdiff --git a/leshan-server-demo/webapp/src/router/index.js b/leshan-server-demo/webapp/src/router/index.js[m
+[1mindex ed14b0a..3d7e527 100644[m
+[1m--- a/leshan-server-demo/webapp/src/router/index.js[m
+[1m+++ b/leshan-server-demo/webapp/src/router/index.js[m
+[36m@@ -29,7 +29,7 @@[m [mVue.use(VueRouter);[m
+ const routes = [[m
+   {[m
+     path: "/",[m
+[31m-    redirect: "/clients",[m
+[32m+[m[32m    redirect: "/parkinglot",[m
+   },[m
+   {[m
+     path: "/clients/:endpoint",[m

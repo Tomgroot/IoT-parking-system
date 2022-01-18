@@ -27,6 +27,12 @@ Contributors:
     <description>A LWM2M demonstration server running an embedded Jetty server</description>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version>
+        </dependency>
         <dependency>
             <groupId>org.jmdns</groupId>
             <artifactId>jmdns</artifactId>

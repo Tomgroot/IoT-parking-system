@@ -12,9 +12,7 @@
   ----------------------------------------------------------------------------->
 <template>
   <div id="app">
-    <v-app>
-      <leshan-nav-bar/>
-      
+    <v-app>      
       <v-main>
         <v-container fluid class="pa-0">
           <router-view >  </router-view>  
@@ -25,11 +23,8 @@
 </template>
 
 <script>
-import LeshanNavBar from "@/components/LeshanNavBar.vue";
 
 export default {
-  components: {
-    LeshanNavBar,
-  },
+  components: {},
 };
 </script>
